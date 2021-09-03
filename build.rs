@@ -104,7 +104,9 @@ fn search_include(include_paths: &[PathBuf], header: &str) -> String {
 fn thread_main() {
     let ffmpeg_dir_env = env::var("FFMPEG_DIR").unwrap();
     let ffmpeg_dir = PathBuf::from(ffmpeg_dir_env);
-    let include_paths = vec![ffmpeg_dir.join("include")];
+    let emsdk_path = PathBuf::from(env::var("EMSDK").unwrap());
+    let emsdk_sysroot = emsdk_path.join("upstream/emscripten/cache/sysroot");
+    let include_paths = vec![ffmpeg_dir.join("include"), emsdk_sysroot.join("include")];
     let src_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     println!("cargo:rustc-link-lib=static=avcodec");
     println!("cargo:rustc-link-lib=static=avfilter");
@@ -116,8 +118,6 @@ fn thread_main() {
     // println!("cargo:rustc-link-lib=static=vpx");
     // println!("cargo:rustc-link-lib=static=aom");
     println!("cargo:rustc-link-search=native={}/lib", ffmpeg_dir.to_string_lossy());
-    let emsdk_path = PathBuf::from(env::var("EMSDK").unwrap());
-    let emsdk_sysroot = emsdk_path.join("upstream/emscripten/cache/sysroot");
 
 
 
@@ -130,8 +130,10 @@ fn thread_main() {
     // the resulting bindings.
     let mut builder = bindgen::Builder::default()
         .clang_args(clang_includes)
+        // https://github.com/rust-lang/rust-bindgen/issues/1941
+        .clang_arg("-fvisibility=default")
         .clang_arg(format!("--sysroot={}", emsdk_sysroot.to_string_lossy()))
-        .clang_arg(format!("-I{}", emsdk_sysroot.join("include").to_string_lossy()))
+        // .clang_arg(format!("-I{}", emsdk_sysroot.join("include").to_string_lossy()))
         .ctypes_prefix("libc")
         // https://github.com/rust-lang/rust-bindgen/issues/550
         .blocklist_type("max_align_t")
@@ -248,6 +250,7 @@ fn thread_main() {
     }
 
     if env::var("CARGO_FEATURE_AVFILTER").is_ok() {
+        println!("avfilter?");
         builder = builder
             .header(search_include(&include_paths, "libavfilter/buffersink.h"))
             .header(search_include(&include_paths, "libavfilter/buffersrc.h"))
