@@ -112,7 +112,7 @@ fn thread_main() {
     println!("cargo:rustc-link-lib=static=avfilter");
     println!("cargo:rustc-link-lib=static=avformat");
     println!("cargo:rustc-link-lib=static=avutil");
-    // println!("cargo:rustc-link-lib=static=swscale");
+    println!("cargo:rustc-link-lib=static=swresample");
     // println!("cargo:rustc-link-lib=static=c-wasm");
     // println!("cargo:rustc-link-lib=static=c-builtins");
     // println!("cargo:rustc-link-lib=static=vpx");
