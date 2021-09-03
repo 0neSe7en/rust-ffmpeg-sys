@@ -108,11 +108,16 @@ fn thread_main() {
     let emsdk_sysroot = emsdk_path.join("upstream/emscripten/cache/sysroot");
     let include_paths = vec![ffmpeg_dir.join("include"), emsdk_sysroot.join("include")];
     let src_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+    // println!("cargo:rustc-link-lib=static={}/lib/libavcodec.a", ffmpeg_dir.to_string_lossy());
+    // println!("cargo:rustc-link-lib=static={}/lib/libavfilter.a", ffmpeg_dir.to_string_lossy());
+    // println!("cargo:rustc-link-lib=static={}/lib/libavformat.a", ffmpeg_dir.to_string_lossy());
+    // println!("cargo:rustc-link-lib=static={}/lib/libavutil.a", ffmpeg_dir.to_string_lossy());
     println!("cargo:rustc-link-lib=static=avcodec");
     println!("cargo:rustc-link-lib=static=avfilter");
     println!("cargo:rustc-link-lib=static=avformat");
     println!("cargo:rustc-link-lib=static=avutil");
     println!("cargo:rustc-link-lib=static=swresample");
+    println!("cargo:rustc-link-lib=static=z");
     // println!("cargo:rustc-link-lib=static=c-wasm");
     // println!("cargo:rustc-link-lib=static=c-builtins");
     // println!("cargo:rustc-link-lib=static=vpx");
