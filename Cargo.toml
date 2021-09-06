@@ -1,6 +1,6 @@
 [package]
 name    = "ffmpeg-sys"
-version = "4.4.0"
+version = "4.3.3"
 build   = "build.rs"
 links   = "ffmpeg"
 readme = "README.md"
